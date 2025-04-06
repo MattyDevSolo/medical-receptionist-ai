@@ -1,0 +1,170 @@
+[
+  {
+    "timestamp": "2025-04-06T01:00:00.000Z",
+    "originalMessage": "Hi, this is Sarah Lim. I'd like to book with Dr. Nguyen tomorrow at 10am. My number is 0401234567.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Sarah Lim",
+      "phone": "0401234567",
+      "doctor": "Dr. Nguyen",
+      "preferred_time": "tomorrow at 10am",
+      "reason": ""
+    }
+  },
+  {
+    "timestamp": "2025-04-06T01:30:00.000Z",
+    "originalMessage": "Hi, Jenna here. Can I move my booking with Dr. Wilson to next Monday at 3pm?",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Jenna Moore",
+      "phone": "0422333444",
+      "doctor": "Dr. Wilson",
+      "preferred_time": "next Monday at 3pm",
+      "reason": "reschedule"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T01:45:00.000Z",
+    "originalMessage": "Hello, I’m Luke Thompson. Just checking if Dr. Patel has any time this Thursday afternoon.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Luke Thompson",
+      "phone": "0412345678",
+      "doctor": "Dr. Patel",
+      "preferred_time": "this Thursday afternoon",
+      "reason": "check availability"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T02:00:00.000Z",
+    "originalMessage": "It's Emily. I have a question about my script. Can I talk to Dr. Singh?",
+    "parsedData": {
+      "intent": "message_for_doctor",
+      "name": "Emily Carter",
+      "phone": "0400000000",
+      "doctor": "Dr. Singh",
+      "preferred_time": "",
+      "reason": "ask about prescription"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Luke Thompson. I’d like to see Dr. Wilson for results discussion at Monday 9am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Luke Thompson",
+      "phone": "0476631405",
+      "doctor": "Dr. Wilson",
+      "preferred_time": "Monday 9am",
+      "reason": "results discussion"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Sarah Lim. I’d like to see Dr. Singh for referral at Wednesday 11am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Sarah Lim",
+      "phone": "0467047127",
+      "doctor": "Dr. Singh",
+      "preferred_time": "Wednesday 11am",
+      "reason": "referral"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Sarah Lim. I’d like to see Dr. Wilson for results discussion at Friday 10am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Sarah Lim",
+      "phone": "0498592683",
+      "doctor": "Dr. Wilson",
+      "preferred_time": "Friday 10am",
+      "reason": "results discussion"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Luke Thompson. I’d like to see Dr. Singh for vaccination at Friday 10am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Luke Thompson",
+      "phone": "0490691724",
+      "doctor": "Dr. Singh",
+      "preferred_time": "Friday 10am",
+      "reason": "vaccination"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Sarah Lim. I’d like to see Dr. Patel for follow-up at Wednesday 11am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Sarah Lim",
+      "phone": "0467887730",
+      "doctor": "Dr. Patel",
+      "preferred_time": "Wednesday 11am",
+      "reason": "follow-up"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Sarah Lim. I’d like to see Dr. Nguyen for referral at Wednesday 11am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Sarah Lim",
+      "phone": "0439076516",
+      "doctor": "Dr. Nguyen",
+      "preferred_time": "Wednesday 11am",
+      "reason": "referral"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Amy Tan. I’d like to see Dr. Singh for checkup at Friday 10am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Amy Tan",
+      "phone": "0494565598",
+      "doctor": "Dr. Singh",
+      "preferred_time": "Friday 10am",
+      "reason": "checkup"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Jenna Moore. I’d like to see Dr. Patel for referral at Friday 10am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Jenna Moore",
+      "phone": "0492386898",
+      "doctor": "Dr. Patel",
+      "preferred_time": "Friday 10am",
+      "reason": "referral"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Mark Bailey. I’d like to see Dr. Wilson for vaccination at Monday 9am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Mark Bailey",
+      "phone": "0466507173",
+      "doctor": "Dr. Wilson",
+      "preferred_time": "Monday 9am",
+      "reason": "vaccination"
+    }
+  },
+  {
+    "timestamp": "2025-04-06T04:38:11.672Z",
+    "originalMessage": "Hi, I’m Jenna Moore. I’d like to see Dr. Singh for checkup at Friday 10am.",
+    "parsedData": {
+      "intent": "appointment_request",
+      "name": "Jenna Moore",
+      "phone": "0465909804",
+      "doctor": "Dr. Singh",
+      "preferred_time": "Friday 10am",
+      "reason": "checkup"
+    }
+  }
+]

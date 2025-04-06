@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Medical Receptionist Logs</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1, h3 {
+      margin-bottom: 10px;
+    }
+    input[type="text"], input[type="date"] {
+      padding: 8px;
+      font-size: 14px;
+    }
+    button {
+      padding: 8px 12px;
+      margin-left: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #eeeeee;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    #summary {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>📋 Appointment Logs</h1>
+  <input id="search" type="text" placeholder="Search by name, doctor, phone..." oninput="filterLogs()" />
+  <button onclick="loadLogs()">🔄 Refresh</button>
+  <button onclick="downloadCSV()">⬇️ Download CSV</button>
+  <button onclick="generateTestLogs()">🧪 Generate Test Logs</button>
+
+  <div style="margin-top: 20px;">
+    <label>From: <input type="date" id="fromDate"></label>
+    <label style="margin-left:10px;">To: <input type="date" id="toDate"></label>
+    <button onclick="filterLogs()">📅 Filter by Date</button>
+  </div>
+
+  <div id="summary">
+    <h3>📈 Stats</h3>
+    <p>Total logs: <span id="totalLogs">0</span></p>
+    <p>Appointments this week: <span id="weekCount">0</span></p>
+    <p>Top doctor: <span id="topDoctor">-</span></p>
+    <canvas id="doctorChart" width="400" height="200"></canvas>
+  </div>
+
+  <table id="logTable">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Doctor</th>
+        <th>Preferred Time</th>
+        <th>Reason</th>
+        <th>🗑️</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    let allLogs = [];
+    let chartInstance = null;
+
+    async function loadLogs() {
+      const res = await fetch('/logs');
+      allLogs = await res.json();
+      filterLogs();
+      updateSummary(allLogs);
+    }
+
+    function filterLogs() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const fromDate = document.getElementById('fromDate').value;
+      const toDate = document.getElementById('toDate').value;
+      const tbody = document.querySelector('#logTable tbody');
+      tbody.innerHTML = '';
+
+      const filtered = allLogs.filter(entry => {
+        const { name, phone, doctor } = entry.parsedData;
+        const matchesText =
+          (name && name.toLowerCase().includes(search)) ||
+          (phone && phone.toLowerCase().includes(search)) ||
+          (doctor && doctor.toLowerCase().includes(search));
+
+        const logDate = new Date(entry.timestamp);
+        const isAfterStart = !fromDate || logDate >= new Date(fromDate);
+        const isBeforeEnd = !toDate || logDate <= new Date(toDate + 'T23:59:59');
+
+        return matchesText && isAfterStart && isBeforeEnd;
+      });
+
+      for (const entry of filtered) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${new Date(entry.timestamp).toLocaleString()}</td>
+          <td>${entry.parsedData.name || ''}</td>
+          <td>${entry.parsedData.phone || ''}</td>
+          <td>${entry.parsedData.doctor || ''}</td>
+          <td>${entry.parsedData.preferred_time || ''}</td>
+          <td>${entry.parsedData.reason || ''}</td>
+          <td><button onclick="deleteLog('${entry.timestamp}')">🗑️</button></td>
+        `;
+        tbody.appendChild(row);
+      }
+    }
+
+    function downloadCSV() {
+      const rows = [
+        ["Time", "Name", "Phone", "Doctor", "Preferred Time", "Reason"],
+        ...document.querySelectorAll('#logTable tbody tr')
+      ].map(row => {
+        if (Array.isArray(row)) return row;
+        return Array.from(row.children).slice(0, 6).map(cell => `"${cell.textContent.trim()}"`);
+      });
+
+      const csvContent = rows.map(r => r.join(",")).join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "appointment_logs.csv";
+      a.click();
+
+      URL.revokeObjectURL(url);
+    }
+
+    function deleteLog(timestamp) {
+      if (!confirm("Are you sure you want to delete this log?")) return;
+
+      fetch(`/logs/${timestamp}`, { method: 'DELETE' })
+        .then(res => {
+          if (res.ok) {
+            alert("Deleted!");
+            loadLogs();
+          } else {
+            alert("Failed to delete log.");
+          }
+        });
+    }
+
+    function generateTestLogs() {
+      fetch('/generate-test-data', { method: 'POST' })
+        .then(res => {
+          if (res.ok) {
+            alert("Test logs created!");
+            loadLogs();
+          } else {
+            alert("Failed to generate test data.");
+          }
+        });
+    }
+
+    function updateSummary(logs) {
+      document.getElementById('totalLogs').textContent = logs.length;
+
+      const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+      const recent = logs.filter(log => new Date(log.timestamp).getTime() > weekAgo);
+      document.getElementById('weekCount').textContent = recent.length;
+
+      const doctorCounts = {};
+      logs.forEach(log => {
+        const doc = log.parsedData.doctor || "Unknown";
+        doctorCounts[doc] = (doctorCounts[doc] || 0) + 1;
+      });
+
+      const sorted = Object.entries(doctorCounts).sort((a, b) => b[1] - a[1]);
+      document.getElementById('topDoctor').textContent = sorted[0]?.[0] || '-';
+
+      const ctx = document.getElementById('doctorChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: sorted.map(d => d[0]),
+          datasets: [{
+            label: 'Appointments per Doctor',
+            data: sorted.map(d => d[1]),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          }
+        }
+      });
+    }
+
+    loadLogs();
+  </script>
+</body>
+</html>
+
